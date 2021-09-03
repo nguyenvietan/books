@@ -1,0 +1,179 @@
+MAKE PLAN: Database revision (2 months)
+
+Databases:
+	+ Find out top databse interview questions: https://www.softwaretestinghelp.com/database-interview-questions
+	+ Catagorize these questions into groups:
+		- 
+		- 
+		-
+		-
+	+ read a reference book: Database System - the Complete Book [0]; lecture notes: http://infolab.stanford.edu/~ullman/fcdb/aut07/index.html#lecture
+	+ [leetcode]: write queries
+	* Apply top-down and  bottom-up approaches, alternatively
+----------------------------------------------
+Bottom-up:
+	+ select 8 must-read chapters
+		-> get key takeaways/read lecture notes
+		-> read related interview questions
+	+ read one chapter/week
+----------------------------------------------
+CHAPTER 1. THE WORLDS OF DATABASE SYSTEMS
+	+ what is database?
+		a 'collection of data' that allows creating/modifying/storing data over a long period of time
+	+ transaction: a unit of work on db, consisting of a set of operations, which are all or none of them are done at a time.
+		eg. banking transaction, A(-$100) -> B (+$100)
+		*properties: ACID
+			Atomicity: all or nothing are done
+			Consistency: A is subtracted (-$100), then B must be added (+$100)
+			Isolation: transactions are independent, eg. no two transactions executed at the same time on A -> unknown value
+			Durability: if succeeded, B += $100, no matter what happen to db
+		+ logging: recover db to some consistent state after failures
+		+ concurrency control: one-at-a-time, using *LOCK to grant access a piece of data
+		+ *deadlock resolution: transactions compete resources, but no one can get access,
+					 because one need something other transaction has.
+					 -> roolback/abort
+	+ query processor:
+		+ query compiler: translate query -> query plan (relational algebra)
+			(query parser/processor/optimizer)
+		+ execution engine: execute steps in query plan
+***********************************************************************************************************
+
+					PART I. RELATIONAL DATABASE MODELING
+
+Chapter 2. The Relational Model of Data
+
+Overview:
+	+ what is a Data model: describes data (structure, operations, constraints)
+	+ categories:
+		(*)relational model: Movies(year, title, length, genre)
+			implemention: like C structs
+			operations: relational algebra
+		semistructured-data model:
+			XML: <movie> ... </movie>
+			implementation: trees, graphs
+	+ prefer the relational model.
+		why? simple + limited, but useful set of operations -> more efficient
+Basics:
+	+ attributes, schemas, tuples, domains(integer, string, ...), keys
+		eg. schema: Movies(*year, *title, length, genre)
+			key (*year, *title): identify unique tuples
+
+Defining a relational schema in SQL:
+	+ CREATE, ALTER, DROP, PRIMARY KEY, ...
+
+Relational Algebra:
+	+ why? less is more
+	+ projection, selection, cartesian product, natural join, theta-joins	
+Constraints on relations:
+	+ keys, referential integrity, ...
+---------------------------------------------
+
+Chapter 3. Design Theory for Relational Databases
+
+Functional dependencies (FDs)
+	(*) A1 A2 ... An -> B1 B2 ... Bm
+	eg. Movies(title, year, length, genre, studioName, starName)
+		(title, year) -> (length, genre, studioName)	
+		key: (title, year, starName)
+		super keys: superset of a key
+
+Rules about FDs
+	Reasoning about FDs: A -> B, B -> C => A -> C
+	Splitting/Combining rule:
+		(*) <=> A1 A2 ... An -> B1, A1 A2 ... An -> B2,... ,A1 A2 ... An -> Bm
+	Trivial FDs: (*) left side is a subset of the right side
+(?)	Closure of Attributes: 
+	Transitive rules, closing sets, projecting FDs
+		
+Design of Relational DBs
+						TABLE I
+	title 		year 	 |	length 	genre 		studioName 	|	starName
+	------------------------|----------------------------------------------------|-----------------
+	Star Wars	1997	 |	124		SciFi		Fox		|	Carrie Fisher
+	Star Wars	1997	 |	124		SciFi		Fox		|	Mark Hamill
+	Star Wars	1997	 |	124		SciFi		Fox		|	Harrison Ford
+	Gone... Wind	1939	 |	231		drama		MGM		|	Vivien Leigh
+	Wayne's World	1992	 |	95		comedy		Paramount	|	Dana Carvey
+	Wayne's World	1992	 |	95		comedy		Paramount	|	Mike Meyers
+	
+	Anomalies: try to cram too much info in only one relation
+		redundency, update anomalies, deletion anomalies
+
+	Decompose relation: eliminate anomalies
+		TABLE I: 	(title, year, length, genre, studioName)
+			 	(title, year, starName)
+
+	Boyce-Codd Normal Form (BCNF)
+		if any non-trivial FDs: A1 A2... An -> B1 B2... Bm => then (A1, A2,..., An) is a super key
+		TABLE I: is NOT in BCNF, because:
+			key: (title, year, starName)
+			FD: title, year -> length, genre, sudioName: (title, year) is not a super key
+	Decomposition into BCNF:
+		separate nontrivial FDs
+		TABLE I -> TABLE I-A (title, year, length, genre, studioName)
+			   TABLE I-B (title, year, starName)
+	Decomposition: Good, Bad, and Ugly
+		anomalies elimination
+		recovery of info: can we recover the original relation from its tuples in decomposition?
+		dependency preservation: are the reconstructed relation satisfied the original FDs?
+			TABLE II (title theater city)
+			FDs:	(x) theater -> city
+				title, city -> theater
+			---
+			=> Keys: (title, city), (title, theater)
+			(x): BCNF violation, as theater is not a super key
+			decomposition: TABLE II-A (theater, city), TABLE II-B (title, theater)
+
+						theater | city		title | theater
+						--------|-----		---------------	
+						T1	| C1		  x1  |  T1
+						T2	| C1		  x1  |  T2
+					joining two tables:
+						theater | city | title
+						----------------------
+						   T1	|  C1	|  x1
+						   T2 	|  C1	|  x2
+					 	=> (title, city) -x-> theater: not preserve FD
+	=> Third Normal Form (3NF):
+		+ relaxation of dependency preservation
+		+ tradeoff between BCNF and dependency preservation
+		if A1 A2... An -> B1 B2... Bm:
+			either (A1, A2,..., An) is a super key
+			or (B1, B2,..., Bm), for those not in A, are in some key (not necessary in the same key)
+		eg. TABLE II is in 3NF, because FD: theater -> city, theater is in a key
+(?) 	4NF
+------------------------------------------ 
+
+Chapter 4. High-level Database Models
+
+						
+			
+			
+
+
+
+
+
+
+
+
+
+
+	
+		
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
