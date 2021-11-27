@@ -1,0 +1,74 @@
+
+												OPERATING SYSTEMS
+												*****************
+
+PART I:
+	1. Intro
+	2. OS structures
+
+PART II:
+	3. Processes
+	4. Threads
+	5. Process Synchronization
+	-6. CPU Scheduling
+	7. Deadlocks
+
+PART III:
+	8. Main Memory
+	9. Virtual Memory
+------------------------------
+
+6. CPU Scheduling
+
+	DEFINITION: a task of selecting a waiting process from the ready queue and allocate CPU to it
+	OBJECTIVES: maximize CPU utilization, always have a process running on the CPU at any time
+
+	PREEMPTIVE vs. NON-PREEMPTIVE:
+		preemptive: a process can be taken away from CPU for another while running
+		non-preemptive: ><	
+	
+	ALGORITHMS:
+
+		Criteria:
+			%CPU utilization
+			Throughput: no. processes completed / time unit
+			Turnaround time: wating time in ready queue + CPU processing time + I/O time
+			Waiting time: time for a process waiting in the ready queue
+			Response time: time from submisstion of a process until the first response
+
+		+ FIFS (First Come, First Serve):
+											|				P1				|	P2	|	P3	|
+				++ simple
+				-- non-preemtive: a process might keep the CPU over an extended period 
+									-> bad if all processes need to share CPU at regular intervals
+		+ SJF (Shortest Job First):
+											|	P2	|	P3	|				P1				|
+				predict the next shortest-CPU-burst task based on current and previous bursts
+						t(n+1) = alpha*T(n) + (1-alpha)*t(n), T(n): current, t(n): past history
+				++ minimize waiting time
+				-- difficult to predict
+		+ Round-Robin scheduling: quantum time >> contex switch time
+		+ Priority scheduling: assing each process a priority level (eg. inverted (predicted) CPU burst)	
+				-- low-priority process: starvation -> solution: Aging (++priority over time)
+		++ Multi-level scheduling: Round-Robin + Priority scheduling
+			(make it easier for round-robin as it needs O(n) search to find the highest-priority job)
+
+			priority = 0:	| T0 | T1 | T2 | T3 | T4 |					
+			priority = 1:	| T5 | T6 | T7 |					
+			priority = 2:	| T8 |                   T9 |				
+			...
+			priority = n:	| Tx | Ty | Tz |
+		++ Multi-level feedback queue scheduling
+			--multi-level scheduling is inflexible, one process might not be process because of low priority
+			-> allow migrating processes between different queues
+---
+	context switch?
+-------------------------------------
+
+	
+
+
+
+
+
+

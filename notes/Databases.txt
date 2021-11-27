@@ -23,10 +23,10 @@ CHAPTER 1. THE WORLDS OF DATABASE SYSTEMS
 	+ transaction: a unit of work on db, consisting of a set of operations, which are all or none of them are done at a time.
 		eg. banking transaction, A(-$100) -> B (+$100)
 		*properties: ACID
-			Atomicity: all or nothing are done
-			Consistency: A is subtracted (-$100), then B must be added (+$100)
+			Atomicity: each transaction is all or nothing
+			Consistency: A is subtracted (-$100), then B must be added (+$100) (Any transaction will bring the database from one valid state to another)
 			Isolation: transactions are independent, eg. no two transactions executed at the same time on A -> unknown value
-			Durability: if succeeded, B += $100, no matter what happen to db
+			Durability: if succeeded, B += $100, no matter what happen to db (Once a transaction has been committed, it will remain so)
 		+ logging: recover db to some consistent state after failures
 		+ concurrency control: one-at-a-time, using *LOCK to grant access a piece of data
 		+ *deadlock resolution: transactions compete resources, but no one can get access,
